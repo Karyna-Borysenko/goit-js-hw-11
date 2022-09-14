@@ -26,7 +26,7 @@ async function onSearch(event) {
   imageApi.resetPage();
   imageApi.resethitsCounter();
 
-  if (imageApi.query.value === '') {
+  if (imageApi.searchQuery === '') {
     return;
   }
 
