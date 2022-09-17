@@ -36,6 +36,7 @@ async function onSearch(event) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+      loadMoreButton.classList.add('is-hidden');
     }
     if (imgResponse.totalHits > 0) {
       Notiflix.Notify.success(
@@ -45,6 +46,15 @@ async function onSearch(event) {
       loadMoreButton.classList.remove('is-hidden');
       createImageCard(imgResponse.hits);
     }
+    if (
+      (imageApi.viewedHits === imageApi.totalHits) &
+      (imgResponse.totalHits !== 0)
+    ) {
+      Notiflix.Notify.info(
+        "We're sorry, but you've reached the end of search results."
+      );
+      loadMoreButton.classList.add('is-hidden');
+    }
   } catch (error) {
     console.log(error.message);
   }
@@ -53,14 +63,13 @@ async function onSearch(event) {
 //************Function onLoadMore****************/////
 
 async function onLoadMore() {
+  const imgResponse = await imageApi.fetchImages();
   if (imageApi.viewedHits === imageApi.totalHits) {
     Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results."
     );
     loadMoreButton.classList.add('is-hidden');
   }
-
-  const imgResponse = await imageApi.fetchImages();
   createImageCard(imgResponse.hits);
 
   autoScroll();
